@@ -1,10 +1,23 @@
-export default function DashboardPage() {
+import { redirect } from "next/navigation";
+
+import { getCurrentUser } from "@/lib/auth/session";
+
+export default async function DashboardPage() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
   return (
-    <div>
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
-      <p className="text-muted-foreground">
-        Welcome to your CRM.
+    <main className="p-8">
+      <h1 className="text-2xl font-semibold">
+        Welcome, {user.name}
+      </h1>
+
+      <p className="mt-2 text-muted-foreground">
+        You are logged in as {user.email}.
       </p>
-    </div>
+    </main>
   );
 }
