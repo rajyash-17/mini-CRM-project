@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -35,7 +37,7 @@ export default function LoginPage() {
         return;
       }
 
-      window.location.href = "/dashboard";
+      router.push("/dashboard");
     } catch {
       setError("Unable to login. Please try again.");
     } finally {
@@ -108,7 +110,7 @@ export default function LoginPage() {
         </form>
 
         <p className="mt-6 text-center text-sm text-muted-foreground">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link
             href="/register"
             className="font-medium text-foreground underline-offset-4 hover:underline"
