@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
@@ -5,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
 
 type Lead = {
   id: string;
@@ -105,7 +107,12 @@ export function LeadsTable({ leads }: LeadsTableProps) {
                     className="border-b last:border-0"
                   >
                     <td className="px-4 py-4 font-medium">
-                      {lead.name}
+                        <Link
+                            href={`/leads/${lead.id}`}
+                            className="hover:underline"
+                        >
+                            {lead.name}
+                        </Link>
                     </td>
 
                     <td className="px-4 py-4">
