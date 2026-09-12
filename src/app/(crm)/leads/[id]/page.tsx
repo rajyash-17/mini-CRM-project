@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getCurrentUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { EditLeadDialog } from "@/components/leads/edit-lead-dialog";
+import { DeleteLeadDialog } from "@/components/leads/delete-lead-dialog";
 
 type LeadDetailsPageProps = {
   params: Promise<{
@@ -53,20 +54,27 @@ export default async function LeadDetailsPage({
     </p>
   </div>
 
-  <EditLeadDialog
-    lead={{
-      id: lead.id,
-      name: lead.name,
-      email: lead.email,
-      phone: lead.phone,
-      source: lead.source,
-      status: lead.status,
-      notes: lead.notes,
-      followUpAt: lead.followUpAt
-        ? lead.followUpAt.toISOString()
-        : null,
-    }}
-  />
+    <div className="flex gap-2">
+    <EditLeadDialog
+        lead={{
+        id: lead.id,
+        name: lead.name,
+        email: lead.email,
+        phone: lead.phone,
+        source: lead.source,
+        status: lead.status,
+        notes: lead.notes,
+        followUpAt: lead.followUpAt
+            ? lead.followUpAt.toISOString()
+            : null,
+        }}
+    />
+
+    <DeleteLeadDialog
+        leadId={lead.id}
+        leadName={lead.name}
+    />
+    </div>
 </div>
 
         <div className="mt-6 rounded-xl border bg-card p-6">
