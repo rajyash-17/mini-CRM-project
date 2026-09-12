@@ -1,36 +1,103 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mini CRM
+
+A simple internal CRM for managing leads, follow-ups, notes, and sales pipeline stages.
+
+## Features
+
+- User registration, login, and logout
+- Protected CRM routes
+- Create, view, edit, and delete leads
+- Lead name, email, phone, source, status, notes, and follow-up date/time
+- Search and filter leads by name, email, phone, status, and source
+- Lead details page
+- Pipeline: New → Contacted → Negotiating → Closed
+- Instant pipeline status updates
+- Dashboard with lead statistics and recent leads
+- Responsive and clean UI
+
+## Tech Stack
+
+- Next.js
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- PostgreSQL
+- Prisma
+- React Hook Form
+- Zod
+- bcryptjs
+- jose (JWT)
+- Neon PostgreSQL
+- Vercel
 
 ## Getting Started
 
-First, run the development server:
+### 1. Clone the repository
 
 ```bash
+git clone https://github.com/rajyash-17/mini-CRM-project.git
+cd mini-crm
+2. Install dependencies
+npm install
+3. Configure environment variables
+
+Create a .env file:
+
+DATABASE_URL="your-postgresql-connection-string"
+JWT_SECRET="your-secret-key"
+4. Set up the database
+npx prisma migrate dev
+npx prisma generate
+5. Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Scripts
+npm run dev      # Start development server
+npm run lint     # Run ESLint
+npm run build    # Create production build
+npm start        # Start production server
+Project Structure
+src/
+├── app/
+│   ├── (crm)/          # Protected CRM pages
+│   ├── api/             # Authentication and lead APIs
+│   ├── login/
+│   └── register/
+├── components/          # UI and CRM components
+├── lib/
+│   ├── auth/            # Password and JWT session handling
+│   └── prisma.ts        # Prisma client
+└── generated/           # Generated Prisma client
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+prisma/
+├── migrations/
+├── schema.prisma
+└── prisma7.config.ts
+Authentication
+Passwords are hashed using bcrypt.
+JWT sessions are stored in HTTP-only cookies.
+CRM routes require authentication.
+Database
 
-## Learn More
+The application uses PostgreSQL with Prisma.
 
-To learn more about Next.js, take a look at the following resources:
+Main models:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+User
+Lead
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Each lead stores its contact details, source, status, notes, follow-up information, and creator.
 
-## Deploy on Vercel
+Scope
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The CRM is intentionally focused on the core requirements of an internal lead-management system without unnecessary complexity.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Future Improvements
+Lead activity history
+Advanced permissions
+Email/calendar integrations
+Reporting and analytics
+Pagination for larger datasets
+
