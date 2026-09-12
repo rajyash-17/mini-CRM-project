@@ -1,6 +1,13 @@
+
+
+
 # Mini CRM
 
 A simple internal CRM for managing leads, follow-ups, notes, and sales pipeline stages.
+
+## Thought Process
+![Though process](<public/Screenshot 2026-09-12 124252.png>)
+
 
 ## Features
 
