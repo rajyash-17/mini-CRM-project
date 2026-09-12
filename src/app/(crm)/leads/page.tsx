@@ -136,18 +136,18 @@ export default function LeadsPage() {
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              Leads
-            </h1>
+  <div>
+    <h1 className="text-2xl font-semibold tracking-tight">
+      Leads
+    </h1>
 
-            <p className="mt-1 text-sm text-muted-foreground">
-              Manage and track your leads.
-            </p>
-          </div>
+    <p className="mt-1 text-sm text-muted-foreground">
+      Manage and track your leads.
+    </p>
+  </div>
 
-          <AddLeadDialog onLeadCreated={fetchLeads} />
-        </div>
+  <AddLeadDialog onLeadCreated={fetchLeads} />
+</div>
 
         {/* Leads Card */}
         <div className="mt-6 rounded-xl border bg-card">

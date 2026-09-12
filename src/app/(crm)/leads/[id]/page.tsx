@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { getCurrentUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
+import { EditLeadDialog } from "@/components/leads/edit-lead-dialog";
 
 type LeadDetailsPageProps = {
   params: Promise<{
@@ -41,13 +42,32 @@ export default async function LeadDetailsPage({
   return (
     <div className="p-6 md:p-8">
       <div className="mx-auto max-w-4xl">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          {lead.name}
-        </h1>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+  <div>
+    <h1 className="text-2xl font-semibold tracking-tight">
+      {lead.name}
+    </h1>
 
-        <p className="mt-1 text-sm text-muted-foreground">
-          Lead details
-        </p>
+    <p className="mt-1 text-sm text-muted-foreground">
+      Lead details
+    </p>
+  </div>
+
+  <EditLeadDialog
+    lead={{
+      id: lead.id,
+      name: lead.name,
+      email: lead.email,
+      phone: lead.phone,
+      source: lead.source,
+      status: lead.status,
+      notes: lead.notes,
+      followUpAt: lead.followUpAt
+        ? lead.followUpAt.toISOString()
+        : null,
+    }}
+  />
+</div>
 
         <div className="mt-6 rounded-xl border bg-card p-6">
           <p>
