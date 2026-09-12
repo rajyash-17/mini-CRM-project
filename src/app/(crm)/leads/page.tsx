@@ -72,38 +72,8 @@ export default function LeadsPage() {
   }
 
   useEffect(() => {
-    let cancelled = false;
-
-    async function loadLeads() {
-      try {
-        const response = await fetch("/api/leads");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch leads");
-        }
-
-        const data = await response.json();
-
-        if (!cancelled) {
-          setLeads(data.leads);
-        }
-      } catch (error) {
-        if (!cancelled) {
-          console.error("Fetch leads error:", error);
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    loadLeads();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  fetchLeads();
+}, []);
 
   const filteredLeads = useMemo(() => {
     const normalizedSearch = search.toLowerCase().trim();
@@ -202,8 +172,14 @@ export default function LeadsPage() {
 
             {/* Table */}
             <div className="mt-6">
-              <LeadsTable leads={filteredLeads} />
-            </div>
+  {loading ? (
+    <div className="rounded-lg border border-dashed p-10 text-center text-sm text-muted-foreground">
+      Loading leads...
+    </div>
+  ) : (
+    <LeadsTable leads={filteredLeads} />
+  )}
+</div>
           </div>
         </div>
       </div>
