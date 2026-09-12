@@ -1,4 +1,6 @@
-import Link from "next/link";
+"use client";
+
+import { useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -31,8 +33,11 @@ type Lead = {
 
 type PipelineColumnProps = {
   title: string;
-  status: Lead["status"];
   leads: Lead[];
+  onLeadUpdated: (
+  leadId: string,
+  newStatus: Lead["status"]
+) => void;
 };
 
 const sourceLabels = {
@@ -44,11 +49,71 @@ const sourceLabels = {
   OTHER: "Other",
 };
 
+const statusOptions = [
+  {
+    value: "NEW",
+    label: "New",
+  },
+  {
+    value: "CONTACTED",
+    label: "Contacted",
+  },
+  {
+    value: "NEGOTIATING",
+    label: "Negotiating",
+  },
+  {
+    value: "CLOSED",
+    label: "Closed",
+  },
+] as const;
+
 export function PipelineColumn({
   title,
-  status,
   leads,
+  onLeadUpdated,
 }: PipelineColumnProps) {
+    
+const [updating, setUpdating] = useState(false);
+
+async function handleStatusChange(
+  leadId: string,
+  newStatus: Lead["status"]
+) {
+    console.log("STATUS CHANGE", leadId, newStatus);
+  setUpdating(true);
+
+  try {
+    console.log("PATCH START");
+    const response = await fetch(
+      `/api/leads/${leadId}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: newStatus,
+        }),
+      }
+    );
+    console.log("PATCH END", response.status);
+
+    if (!response.ok) {
+      throw new Error("Failed to update lead status");
+    }
+
+    onLeadUpdated(leadId, newStatus);
+
+  } catch (error) {
+    console.error(
+      "Update lead status error:",
+      error
+    );
+  } finally {
+    setUpdating(false);
+  }
+}
   return (
     <div className="min-w-[280px] flex-1">
       <div className="mb-3 flex items-center justify-between">
@@ -68,12 +133,10 @@ export function PipelineColumn({
           </div>
         ) : (
           leads.map((lead) => (
-            <Link
+            
+              <Card 
               key={lead.id}
-              href={`/leads/${lead.id}`}
-              className="block"
-            >
-              <Card className="transition-colors hover:bg-muted/50">
+              className="transition-colors hover:bg-muted/50">
                 <CardHeader>
                   <CardTitle className="text-sm">
                     {lead.name}
@@ -81,9 +144,40 @@ export function PipelineColumn({
                 </CardHeader>
 
                 <CardContent className="space-y-2 text-sm">
+                    
                   <p className="text-muted-foreground">
                     {sourceLabels[lead.source]}
                   </p>
+                  <div className="pt-2">
+  <label
+    htmlFor={`status-${lead.id}`}
+    className="text-xs text-muted-foreground"
+  >
+    Status
+  </label>
+
+  <select
+    id={`status-${lead.id}`}
+    value={lead.status}
+    disabled={updating}
+    onChange={(event) =>
+      handleStatusChange(
+        lead.id,
+        event.target.value as Lead["status"]
+      )
+    }
+    className="border-input bg-background mt-1 h-8 w-full rounded-md border px-2 text-xs"
+  >
+    {statusOptions.map((option) => (
+      <option
+        key={option.value}
+        value={option.value}
+      >
+        {option.label}
+      </option>
+    ))}
+  </select>
+</div>
 
                   {lead.email && (
                     <p className="truncate">
@@ -101,7 +195,7 @@ export function PipelineColumn({
                   )}
                 </CardContent>
               </Card>
-            </Link>
+            
           ))
         )}
       </div>

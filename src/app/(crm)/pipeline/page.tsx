@@ -1,24 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import { PipelineColumn } from "@/components/pipeline/pipeline-column";
+import { PipelineBoard } from "@/components/pipeline/pipeline-board";
 
-const columns = [
-  {
-    title: "New",
-    status: "NEW" as const,
-  },
-  {
-    title: "Contacted",
-    status: "CONTACTED" as const,
-  },
-  {
-    title: "Negotiating",
-    status: "NEGOTIATING" as const,
-  },
-  {
-    title: "Closed",
-    status: "CLOSED" as const,
-  },
-];
 
 export default async function PipelinePage() {
   const leads = await prisma.lead.findMany({
@@ -57,22 +39,7 @@ export default async function PipelinePage() {
           </p>
         </div>
 
-        <div className="mt-6 flex gap-4 overflow-x-auto pb-4">
-          {columns.map((column) => {
-            const columnLeads = serializedLeads.filter(
-              (lead) => lead.status === column.status
-            );
-
-            return (
-              <PipelineColumn
-                key={column.status}
-                title={column.title}
-                status={column.status}
-                leads={columnLeads}
-              />
-            );
-          })}
-        </div>
+        <PipelineBoard leads={serializedLeads} />
       </div>
     </div>
   );
