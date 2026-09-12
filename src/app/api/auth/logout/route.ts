@@ -1,15 +1,8 @@
 import { NextResponse } from "next/server";
+import { logout } from "@/lib/auth/session";
 
-export async function POST() {
-  const response = NextResponse.json({
-    message: "Logged out successfully",
-  });
+export async function POST(request: Request) {
+  await logout();
 
-  response.cookies.set("session", "", {
-    httpOnly: true,
-    expires: new Date(0),
-    path: "/",
-  });
-
-  return response;
+  return NextResponse.redirect(new URL("/login", request.url));
 }
