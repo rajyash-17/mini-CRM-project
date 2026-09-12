@@ -1,4 +1,11 @@
 import Link from "next/link";
+import {
+  ArrowRight,
+  CircleCheck,
+  CircleDot,
+  Handshake,
+  Users,
+} from "lucide-react";
 import { prisma } from "@/lib/prisma";
 
 const statusLabels = {
@@ -29,61 +36,133 @@ export default async function DashboardPage() {
     ]);
 
   const stats = [
-    { label: "Total Leads", value: total },
-    { label: "New", value: newLeads },
-    { label: "Contacted", value: contacted },
-    { label: "Negotiating", value: negotiating },
-    { label: "Closed", value: closed },
+    {
+      label: "Total Leads",
+      value: total,
+      icon: Users,
+      description: "All leads",
+    },
+    {
+      label: "New",
+      value: newLeads,
+      icon: CircleDot,
+      description: "Awaiting contact",
+    },
+    {
+      label: "Contacted",
+      value: contacted,
+      icon: Users,
+      description: "In conversation",
+    },
+    {
+      label: "Negotiating",
+      value: negotiating,
+      icon: Handshake,
+      description: "Potential deals",
+    },
+    {
+      label: "Closed",
+      value: closed,
+      icon: CircleCheck,
+      description: "Completed deals",
+    },
   ];
 
   return (
-    <div className="p-6 md:p-8">
+    <div className="min-h-[calc(100vh-4rem)] bg-muted/20 p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Dashboard
-          </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Overview of your leads and sales pipeline.
-          </p>
+        {/* Header */}
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">
+              Overview
+            </p>
+
+            <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+              Dashboard
+            </h1>
+
+            <p className="mt-2 text-sm text-muted-foreground">
+              Keep track of your leads and sales pipeline.
+            </p>
+          </div>
+
+          <Link
+            href="/leads"
+            className="inline-flex h-9 items-center justify-center gap-2 rounded-md border bg-background px-4 text-sm font-medium shadow-sm transition-colors hover:bg-muted"
+          >
+            View all leads
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-xl border bg-card p-5"
-            >
-              <p className="text-sm text-muted-foreground">
-                {stat.label}
-              </p>
-              <p className="mt-2 text-3xl font-semibold tracking-tight">
-                {stat.value}
-              </p>
-            </div>
-          ))}
+        {/* Stats */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {stats.map((stat) => {
+            const Icon = stat.icon;
+
+            return (
+              <div
+                key={stat.label}
+                className="rounded-xl border bg-card p-5 shadow-sm"
+              >
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-muted-foreground">
+                    {stat.label}
+                  </p>
+
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                </div>
+
+                <p className="mt-4 text-3xl font-semibold tracking-tight">
+                  {stat.value}
+                </p>
+
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {stat.description}
+                </p>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="mt-8 rounded-xl border bg-card">
-          <div className="flex items-center justify-between border-b px-6 py-4">
+        {/* Recent Leads */}
+        <div className="mt-8 rounded-xl border bg-card shadow-sm">
+          <div className="flex items-center justify-between border-b px-6 py-5">
             <div>
               <h2 className="font-semibold">Recent Leads</h2>
               <p className="mt-1 text-sm text-muted-foreground">
-                Your latest leads.
+                The latest leads added to your CRM.
               </p>
             </div>
 
             <Link
               href="/leads"
-              className="text-sm font-medium hover:underline"
+              className="hidden items-center gap-1 text-sm font-medium hover:underline sm:flex"
             >
               View all
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           {recentLeads.length === 0 ? (
-            <div className="px-6 py-10 text-center text-sm text-muted-foreground">
-              No leads yet.
+            <div className="px-6 py-12 text-center">
+              <Users className="mx-auto h-8 w-8 text-muted-foreground" />
+
+              <p className="mt-3 text-sm font-medium">
+                No leads yet
+              </p>
+
+              <p className="mt-1 text-sm text-muted-foreground">
+                Add your first lead to get started.
+              </p>
+
+              <Link
+                href="/leads"
+                className="mt-4 inline-flex text-sm font-medium hover:underline"
+              >
+                Go to Leads
+              </Link>
             </div>
           ) : (
             <div className="divide-y">
@@ -91,24 +170,60 @@ export default async function DashboardPage() {
                 <Link
                   key={lead.id}
                   href={`/leads/${lead.id}`}
-                  className="flex items-center justify-between px-6 py-4 hover:bg-muted/50"
+                  className="flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-muted/40"
                 >
-                  <div>
-                    <p className="text-sm font-medium">{lead.name}</p>
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">
+                      {lead.name}
+                    </p>
+
                     {lead.email && (
-                      <p className="mt-1 text-xs text-muted-foreground">
+                      <p className="mt-1 truncate text-xs text-muted-foreground">
                         {lead.email}
                       </p>
                     )}
                   </div>
 
-                  <span className="text-sm text-muted-foreground">
+                  <span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-medium">
                     {statusLabels[lead.status]}
                   </span>
                 </Link>
               ))}
             </div>
           )}
+        </div>
+
+        {/* Quick Actions */}
+        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+          <Link
+            href="/leads"
+            className="group rounded-xl border bg-card p-6 shadow-sm transition-colors hover:bg-muted/40"
+          >
+            <p className="font-semibold">Manage Leads</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Add, edit, search, and manage your leads.
+            </p>
+
+            <div className="mt-4 flex items-center gap-1 text-sm font-medium">
+              Open Leads
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
+
+          <Link
+            href="/pipeline"
+            className="group rounded-xl border bg-card p-6 shadow-sm transition-colors hover:bg-muted/40"
+          >
+            <p className="font-semibold">Sales Pipeline</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Track leads through each stage of the sales process.
+            </p>
+
+            <div className="mt-4 flex items-center gap-1 text-sm font-medium">
+              Open Pipeline
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </div>
+          </Link>
         </div>
       </div>
     </div>
