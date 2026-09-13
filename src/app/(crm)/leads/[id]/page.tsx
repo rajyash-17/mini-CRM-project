@@ -14,6 +14,7 @@ import { prisma } from "@/lib/prisma";
 import { EditLeadDialog } from "@/components/leads/edit-lead-dialog";
 import { DeleteLeadDialog } from "@/components/leads/delete-lead-dialog";
 import { LeadNotes } from "@/components/leads/lead-notes";
+import { LeadFollowUps } from "@/components/leads/lead-follow-ups";
 
 type LeadDetailsPageProps = {
   params: Promise<{
@@ -375,6 +376,11 @@ export default async function LeadDetailsPage({
             </div>
           </section>
         </div>
+
+          <LeadFollowUps
+  leadId={lead.id}
+  legacyFollowUpAt={lead.followUpAt?.toISOString() ?? null}
+/>      
           {/* Notes */}
           <LeadNotes
             leadId={lead.id}
