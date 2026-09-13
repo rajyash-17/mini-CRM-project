@@ -13,6 +13,7 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { prisma } from "@/lib/prisma";
 import { EditLeadDialog } from "@/components/leads/edit-lead-dialog";
 import { DeleteLeadDialog } from "@/components/leads/delete-lead-dialog";
+import { LeadNotes } from "@/components/leads/lead-notes";
 
 type LeadDetailsPageProps = {
   params: Promise<{
@@ -374,37 +375,12 @@ export default async function LeadDetailsPage({
             </div>
           </section>
         </div>
-
-        {/* Notes */}
-        <section className="mt-4 rounded-xl border bg-card shadow-sm">
-          <div className="border-b px-5 py-4 sm:px-6">
-            <h2 className="font-semibold">
-              Notes
-            </h2>
-
-            <p className="mt-1 text-sm text-muted-foreground">
-              Context and information recorded for this lead.
-            </p>
-          </div>
-
-          <div className="p-5 sm:p-6">
-            {lead.notes ? (
-              <p className="whitespace-pre-wrap text-sm leading-6">
-                {lead.notes}
-              </p>
-            ) : (
-              <div className="rounded-lg border border-dashed px-4 py-8 text-center">
-                <p className="text-sm font-medium">
-                  No notes added
-                </p>
-
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Edit this lead to add useful context.
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
+          {/* Notes */}
+          <LeadNotes
+            leadId={lead.id}
+            legacyNote={lead.notes}
+          />
+        
 
         {/* Lead metadata */}
         <section className="mt-4 rounded-xl border bg-card shadow-sm">
