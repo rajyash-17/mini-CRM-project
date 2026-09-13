@@ -69,7 +69,7 @@ export default async function DashboardPage() {
   ];
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-muted/20 p-6 md:p-8">
+    <div className="min-h-[calc(100vh-4rem)] bg-muted/20 p-4 sm:p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -78,7 +78,7 @@ export default async function DashboardPage() {
               Overview
             </p>
 
-            <h1 className="mt-1 text-3xl font-semibold tracking-tight">
+            <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
               Dashboard
             </h1>
 
@@ -89,7 +89,7 @@ export default async function DashboardPage() {
 
           <Link
             href="/leads"
-            className="inline-flex h-9 items-center justify-center gap-2 rounded-md border bg-background px-4 text-sm font-medium shadow-sm transition-colors hover:bg-muted"
+            className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-md border bg-background px-4 text-sm font-medium shadow-sm transition-colors hover:bg-muted sm:w-auto"
           >
             View all leads
             <ArrowRight className="h-4 w-4" />
@@ -97,14 +97,14 @@ export default async function DashboardPage() {
         </div>
 
         {/* Stats */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 lg:grid-cols-5">
           {stats.map((stat) => {
             const Icon = stat.icon;
 
             return (
               <div
                 key={stat.label}
-                className="rounded-xl border bg-card p-5 shadow-sm"
+                className="rounded-xl border bg-card p-4 shadow-sm sm:p-5"
               >
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-muted-foreground">
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
                   <Icon className="h-4 w-4 text-muted-foreground" />
                 </div>
 
-                <p className="mt-4 text-3xl font-semibold tracking-tight">
+                <p className="mt-3 text-2xl font-semibold tracking-tight sm:mt-4 sm:text-3xl">
                   {stat.value}
                 </p>
 
@@ -127,8 +127,8 @@ export default async function DashboardPage() {
         </div>
 
         {/* Recent Leads */}
-        <div className="mt-8 rounded-xl border bg-card shadow-sm">
-          <div className="flex items-center justify-between border-b px-6 py-5">
+        <div className="mt-6 rounded-xl border bg-card shadow-sm sm:mt-8">
+          <div className="flex items-center justify-between gap-4 border-b px-4 py-4 sm:px-6 sm:py-5">
             <div>
               <h2 className="font-semibold">Recent Leads</h2>
               <p className="mt-1 text-sm text-muted-foreground">
@@ -170,7 +170,7 @@ export default async function DashboardPage() {
                 <Link
                   key={lead.id}
                   href={`/leads/${lead.id}`}
-                  className="flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-muted/40"
+                  className="flex items-center justify-between gap-3 px-4 py-4 transition-colors hover:bg-muted/40 sm:gap-4 sm:px-6"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium">
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
                     )}
                   </div>
 
-                  <span className="shrink-0 rounded-full bg-muted px-3 py-1 text-xs font-medium">
+                  <span className="shrink-0 rounded-full bg-muted px-2.5 py-1 text-xs font-medium sm:px-3">
                     {statusLabels[lead.status]}
                   </span>
                 </Link>
@@ -194,10 +194,10 @@ export default async function DashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4">
           <Link
             href="/leads"
-            className="group rounded-xl border bg-card p-6 shadow-sm transition-colors hover:bg-muted/40"
+            className="group rounded-xl border bg-card p-5 shadow-sm transition-colors hover:bg-muted/40 sm:p-6"
           >
             <p className="font-semibold">Manage Leads</p>
             <p className="mt-1 text-sm text-muted-foreground">

@@ -115,18 +115,18 @@ export default function LeadsPage() {
   }, [leads, search, statusFilter, sourceFilter]);
 
   return (
-    <div className="p-6 md:p-8">
+    <div className="bg-muted/20 p-4 sm:p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
   <div>
-    <h1 className="text-2xl font-semibold tracking-tight">
+    <h1 className="text-3xl font-semibold tracking-tight">
       Leads
     </h1>
 
-    <p className="mt-1 text-sm text-muted-foreground">
-      Manage and track your leads.
-    </p>
+    <p className="mt-2 text-sm text-muted-foreground">
+  Manage and track your sales leads.
+  </p>
   </div>
 
   <AddLeadDialog
@@ -138,21 +138,28 @@ export default function LeadsPage() {
 </div>
 
         {/* Leads Card */}
-        <div className="mt-6 rounded-xl border bg-card">
-          <div className="p-6">
-            <h2 className="text-base font-semibold">
-              All Leads
-            </h2>
+        <div className="mt-8 overflow-hidden rounded-xl border bg-card shadow-sm">
+          <div className="p-4 sm:p-6">
+            <div>
+  <h2 className="text-base font-semibold">
+    All Leads
+  </h2>
+
+  <p className="mt-1 text-sm text-muted-foreground">
+    {filteredLeads.length}{" "}
+    {filteredLeads.length === 1 ? "lead" : "leads"} found
+  </p>
+</div>
 
             {/* Filters */}
-            <div className="mt-4 flex flex-col gap-3 md:flex-row">
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Input
                 placeholder="Search by name, email or phone..."
                 value={search}
                 onChange={(event) =>
                   setSearch(event.target.value)
                 }
-                className="md:max-w-sm"
+                className="w-full sm:max-w-sm"
               />
 
               <select
@@ -160,7 +167,7 @@ export default function LeadsPage() {
                 onChange={(event) =>
                   setStatusFilter(event.target.value)
                 }
-                className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+                className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm sm:w-auto"
               >
                 {Object.entries(statusLabels).map(
                   ([value, label]) => (
@@ -176,7 +183,7 @@ export default function LeadsPage() {
                 onChange={(event) =>
                   setSourceFilter(event.target.value)
                 }
-                className="border-input bg-background h-9 rounded-md border px-3 text-sm"
+                className="border-input bg-background h-9 w-full rounded-md border px-3 text-sm sm:w-auto"
               >
                 {Object.entries(sourceLabels).map(
                   ([value, label]) => (
@@ -189,7 +196,7 @@ export default function LeadsPage() {
             </div>
 
             {/* Table */}
-            <div className="mt-6">
+            <div className="mt-6 overflow-x-auto">
   {loading ? (
     <div className="rounded-lg border border-dashed p-10 text-center text-sm text-muted-foreground">
       Loading leads...
