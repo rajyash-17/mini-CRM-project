@@ -61,13 +61,13 @@ export async function GET(
 
     return NextResponse.json({ followUps });
   } catch (error) {
-    console.error("Get lead follow-ups error:", error);
+  console.error("Get lead follow-ups error:", error);
 
-    return NextResponse.json(
-      { error: "Failed to fetch follow-ups" },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(
+    { error: "Failed to fetch follow-ups" },
+    { status: 500 }
+  );
+}
 }
 
 export async function POST(
