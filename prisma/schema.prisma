@@ -35,7 +35,7 @@ model User {
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-}pdatedAt    DateTime @updatedAt
+}
 
 
 model Lead {
