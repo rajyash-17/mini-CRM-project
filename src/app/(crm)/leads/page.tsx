@@ -54,25 +54,38 @@ export default function LeadsPage() {
   const [sourceFilter, setSourceFilter] = useState("ALL");
 
   async function fetchLeads() {
-    try {
-      const response = await fetch("/api/leads");
+  try {
+    const response = await fetch("/api/leads");
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch leads");
-      }
+    if (!response.ok) {
+      throw new Error("Failed to fetch leads");
+    }
 
-      const data = await response.json();
+    const data = await response.json();
+    return data.leads as Lead[];
+  } catch (error) {
+    console.error("Fetch leads error:", error);
+    return [];
+  }
+}
 
-      setLeads(data.leads);
-    } catch (error) {
-      console.error("Fetch leads error:", error);
-    } finally {
+  useEffect(() => {
+  let cancelled = false;
+
+  async function loadLeads() {
+    const data = await fetchLeads();
+
+    if (!cancelled) {
+      setLeads(data);
       setLoading(false);
     }
   }
 
-  useEffect(() => {
-  fetchLeads();
+  loadLeads();
+
+  return () => {
+    cancelled = true;
+  };
 }, []);
 
   const filteredLeads = useMemo(() => {
@@ -116,7 +129,12 @@ export default function LeadsPage() {
     </p>
   </div>
 
-  <AddLeadDialog onLeadCreated={fetchLeads} />
+  <AddLeadDialog
+  onLeadCreated={async () => {
+    const data = await fetchLeads();
+    setLeads(data);
+  }}
+/>
 </div>
 
         {/* Leads Card */}
