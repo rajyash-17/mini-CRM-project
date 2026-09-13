@@ -6,6 +6,8 @@ import {
   Handshake,
   Users,
 } from "lucide-react";
+
+import { DashboardCharts } from "@/components/dashboard/dashboard-charts";
 import { prisma } from "@/lib/prisma";
 
 const statusLabels = {
@@ -13,27 +15,141 @@ const statusLabels = {
   CONTACTED: "Contacted",
   NEGOTIATING: "Negotiating",
   CLOSED: "Closed",
-};
+} as const;
+
+const sourceLabels = {
+  WEBSITE: "Website",
+  LINKEDIN: "LinkedIn",
+  REFERRAL: "Referral",
+  INSTAGRAM: "Instagram",
+  COLD_OUTREACH: "Cold Outreach",
+  OTHER: "Other",
+} as const;
 
 export default async function DashboardPage() {
-  const [total, newLeads, contacted, negotiating, closed, recentLeads] =
-    await Promise.all([
-      prisma.lead.count(),
-      prisma.lead.count({ where: { status: "NEW" } }),
-      prisma.lead.count({ where: { status: "CONTACTED" } }),
-      prisma.lead.count({ where: { status: "NEGOTIATING" } }),
-      prisma.lead.count({ where: { status: "CLOSED" } }),
-      prisma.lead.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          status: true,
+  const now = new Date();
+
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+
+  const startOfTomorrow = new Date(startOfToday);
+  startOfTomorrow.setDate(startOfTomorrow.getDate() + 1);
+
+  const [
+    total,
+    newLeads,
+    contacted,
+    negotiating,
+    closed,
+    recentLeads,
+    statusCounts,
+    sourceCounts,
+    overdueFollowUps,
+    todayFollowUps,
+    upcomingFollowUps,
+  ] = await Promise.all([
+    prisma.lead.count(),
+
+    prisma.lead.count({
+      where: { status: "NEW" },
+    }),
+
+    prisma.lead.count({
+      where: { status: "CONTACTED" },
+    }),
+
+    prisma.lead.count({
+      where: { status: "NEGOTIATING" },
+    }),
+
+    prisma.lead.count({
+      where: { status: "CLOSED" },
+    }),
+
+    prisma.lead.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        status: true,
+      },
+    }),
+
+    prisma.lead.groupBy({
+      by: ["status"],
+      _count: {
+        _all: true,
+      },
+    }),
+
+    prisma.lead.groupBy({
+      by: ["source"],
+      _count: {
+        _all: true,
+      },
+    }),
+
+    prisma.followUp.count({
+      where: {
+        completedAt: null,
+        dueAt: {
+          lt: now,
         },
-      }),
-    ]);
+      },
+    }),
+
+    prisma.followUp.count({
+      where: {
+        completedAt: null,
+        dueAt: {
+          gte: startOfToday,
+          lt: startOfTomorrow,
+        },
+      },
+    }),
+
+    prisma.followUp.count({
+      where: {
+        completedAt: null,
+        dueAt: {
+          gte: startOfTomorrow,
+        },
+      },
+    }),
+  ]);
+
+  const statusData = (
+    Object.keys(statusLabels) as Array<keyof typeof statusLabels>
+  ).map((status) => ({
+    name: statusLabels[status],
+    value:
+      statusCounts.find((item) => item.status === status)?._count._all ?? 0,
+  }));
+
+  const sourceData = (
+    Object.keys(sourceLabels) as Array<keyof typeof sourceLabels>
+  ).map((source) => ({
+    name: sourceLabels[source],
+    value:
+      sourceCounts.find((item) => item.source === source)?._count._all ?? 0,
+  }));
+
+  const followUpData = [
+    {
+      name: "Overdue",
+      value: overdueFollowUps,
+    },
+    {
+      name: "Today",
+      value: todayFollowUps,
+    },
+    {
+      name: "Upcoming",
+      value: upcomingFollowUps,
+    },
+  ];
 
   const stats = [
     {
@@ -126,11 +242,19 @@ export default async function DashboardPage() {
           })}
         </div>
 
+        {/* Analytics */}
+        <DashboardCharts
+          statusData={statusData}
+          sourceData={sourceData}
+          followUpData={followUpData}
+        />
+
         {/* Recent Leads */}
         <div className="mt-6 rounded-xl border bg-card shadow-sm sm:mt-8">
           <div className="flex items-center justify-between gap-4 border-b px-4 py-4 sm:px-6 sm:py-5">
             <div>
               <h2 className="font-semibold">Recent Leads</h2>
+
               <p className="mt-1 text-sm text-muted-foreground">
                 The latest leads added to your CRM.
               </p>
@@ -149,9 +273,7 @@ export default async function DashboardPage() {
             <div className="px-6 py-12 text-center">
               <Users className="mx-auto h-8 w-8 text-muted-foreground" />
 
-              <p className="mt-3 text-sm font-medium">
-                No leads yet
-              </p>
+              <p className="mt-3 text-sm font-medium">No leads yet</p>
 
               <p className="mt-1 text-sm text-muted-foreground">
                 Add your first lead to get started.
@@ -200,6 +322,7 @@ export default async function DashboardPage() {
             className="group rounded-xl border bg-card p-5 shadow-sm transition-colors hover:bg-muted/40 sm:p-6"
           >
             <p className="font-semibold">Manage Leads</p>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Add, edit, search, and manage your leads.
             </p>
@@ -215,6 +338,7 @@ export default async function DashboardPage() {
             className="group rounded-xl border bg-card p-6 shadow-sm transition-colors hover:bg-muted/40"
           >
             <p className="font-semibold">Sales Pipeline</p>
+
             <p className="mt-1 text-sm text-muted-foreground">
               Track leads through each stage of the sales process.
             </p>
