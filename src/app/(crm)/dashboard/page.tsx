@@ -152,37 +152,42 @@ export default async function DashboardPage() {
   ];
 
   const stats = [
-    {
-      label: "Total Leads",
-      value: total,
-      icon: Users,
-      description: "All leads",
-    },
-    {
-      label: "New",
-      value: newLeads,
-      icon: CircleDot,
-      description: "Awaiting contact",
-    },
-    {
-      label: "Contacted",
-      value: contacted,
-      icon: Users,
-      description: "In conversation",
-    },
-    {
-      label: "Negotiating",
-      value: negotiating,
-      icon: Handshake,
-      description: "Potential deals",
-    },
-    {
-      label: "Closed",
-      value: closed,
-      icon: CircleCheck,
-      description: "Completed deals",
-    },
-  ];
+  {
+    label: "Total Leads",
+    value: total,
+    icon: Users,
+    description: "All leads",
+    href: "/leads",
+  },
+  {
+    label: "New",
+    value: newLeads,
+    icon: CircleDot,
+    description: "Awaiting contact",
+    href: "/leads?status=NEW",
+  },
+  {
+    label: "Contacted",
+    value: contacted,
+    icon: Users,
+    description: "In conversation",
+    href: "/leads?status=CONTACTED",
+  },
+  {
+    label: "Negotiating",
+    value: negotiating,
+    icon: Handshake,
+    description: "Potential deals",
+    href: "/leads?status=NEGOTIATING",
+  },
+  {
+    label: "Closed",
+    value: closed,
+    icon: CircleCheck,
+    description: "Completed deals",
+    href: "/leads?status=CLOSED",
+  },
+];
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-muted/20 p-4 sm:p-6 md:p-8">
@@ -218,26 +223,27 @@ export default async function DashboardPage() {
             const Icon = stat.icon;
 
             return (
-              <div
-                key={stat.label}
-                className="rounded-xl border bg-card p-4 shadow-sm sm:p-5"
-              >
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {stat.label}
-                  </p>
+              <Link
+  key={stat.label}
+  href={stat.href}
+  className="group rounded-xl border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md sm:p-5"
+>
+  <div className="flex items-center justify-between">
+    <p className="text-sm font-medium text-muted-foreground">
+      {stat.label}
+    </p>
 
-                  <Icon className="h-4 w-4 text-muted-foreground" />
-                </div>
+    <Icon className="h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+  </div>
 
-                <p className="mt-3 text-2xl font-semibold tracking-tight sm:mt-4 sm:text-3xl">
-                  {stat.value}
-                </p>
+  <p className="mt-3 text-2xl font-semibold tracking-tight sm:mt-4 sm:text-3xl">
+    {stat.value}
+  </p>
 
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {stat.description}
-                </p>
-              </div>
+  <p className="mt-1 text-xs text-muted-foreground">
+    {stat.description}
+  </p>
+</Link>
             );
           })}
         </div>

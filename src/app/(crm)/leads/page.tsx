@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { LeadsTable } from "@/components/leads/leads-table";
 import { AddLeadDialog } from "@/components/leads/add-lead-dialog";
 import { Input } from "@/components/ui/input";
+import { useSearchParams } from "next/navigation";
 
 type Lead = {
   id: string;
@@ -50,7 +51,15 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
 
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("ALL");
+  const searchParams = useSearchParams();
+const initialStatus = searchParams.get("status");
+
+const [statusFilter, setStatusFilter] = useState(
+  initialStatus &&
+    ["NEW", "CONTACTED", "NEGOTIATING", "CLOSED"].includes(initialStatus)
+    ? initialStatus
+    : "ALL"
+);
   const [sourceFilter, setSourceFilter] = useState("ALL");
 
   async function fetchLeads() {
