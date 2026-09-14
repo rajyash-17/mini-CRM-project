@@ -107,7 +107,9 @@ export function DashboardCharts({
                     statusColors[index % statusColors.length],
                 }}
               />
+
               <span className="text-muted-foreground">{item.name}</span>
+
               <span className="ml-auto font-medium">{item.value}</span>
             </div>
           ))}
@@ -118,6 +120,7 @@ export function DashboardCharts({
       <div className="rounded-xl border bg-card p-4 shadow-sm sm:p-6">
         <div>
           <h2 className="font-semibold">Lead Sources</h2>
+
           <p className="mt-1 text-sm text-muted-foreground">
             Where your leads are coming from.
           </p>
@@ -132,27 +135,36 @@ export function DashboardCharts({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={sourceData}
-                margin={{ top: 5, right: 5, left: -20, bottom: 5 }}
+                layout="vertical"
+                margin={{
+                  top: 5,
+                  right: 10,
+                  left: 5,
+                  bottom: 5,
+                }}
               >
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  vertical={false}
+                  horizontal={false}
+                  vertical={true}
                   stroke="hsl(var(--border))"
                 />
 
                 <XAxis
-                  dataKey="name"
-                  tickLine={false}
-                  axisLine={false}
-                  tick={{ fontSize: 12 }}
-                  interval={0}
-                />
-
-                <YAxis
+                  type="number"
                   allowDecimals={false}
                   tickLine={false}
                   axisLine={false}
                   tick={{ fontSize: 12 }}
+                />
+
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={90}
+                  tickLine={false}
+                  axisLine={false}
+                  tick={{ fontSize: 11 }}
                 />
 
                 <Tooltip
@@ -169,9 +181,9 @@ export function DashboardCharts({
 
                 <Bar
                   dataKey="value"
-                  radius={[5, 5, 0, 0]}
+                  radius={[0, 5, 5, 0]}
                   fill="hsl(var(--chart-1))"
-                  maxBarSize={42}
+                  maxBarSize={28}
                 />
               </BarChart>
             </ResponsiveContainer>
@@ -183,6 +195,7 @@ export function DashboardCharts({
       <div className="rounded-xl border bg-card p-4 shadow-sm sm:p-6 lg:col-span-2">
         <div>
           <h2 className="font-semibold">Follow-up Overview</h2>
+
           <p className="mt-1 text-sm text-muted-foreground">
             Keep track of follow-ups that need your attention.
           </p>
@@ -195,6 +208,7 @@ export function DashboardCharts({
               className="rounded-lg border bg-muted/20 p-4"
             >
               <p className="text-sm text-muted-foreground">{item.name}</p>
+
               <p className="mt-2 text-2xl font-semibold">{item.value}</p>
             </div>
           ))}
