@@ -35,10 +35,10 @@ type DashboardChartsProps = {
 };
 
 const statusColors = [
-  "hsl(var(--chart-1))",
-  "hsl(var(--chart-2))",
-  "hsl(var(--chart-3))",
-  "hsl(var(--chart-4))",
+  "var(--chart-1)",
+  "var(--chart-2)",
+  "var(--chart-3)",
+  "var(--chart-4)",
 ];
 
 export function DashboardCharts({
@@ -88,8 +88,9 @@ export function DashboardCharts({
                   formatter={(value) => [value, "Leads"]}
                   contentStyle={{
                     borderRadius: "8px",
-                    border: "1px solid hsl(var(--border))",
-                    backgroundColor: "hsl(var(--card))",
+                    border: "1px solid var(--border)",
+                    backgroundColor: "var(--card)",
+                    color: "var(--card-foreground)",
                   }}
                 />
               </PieChart>
@@ -99,7 +100,10 @@ export function DashboardCharts({
 
         <div className="mt-2 grid grid-cols-2 gap-3">
           {statusData.map((item, index) => (
-            <div key={item.name} className="flex items-center gap-2 text-sm">
+            <div
+              key={item.name}
+              className="flex items-center gap-2 text-sm"
+            >
               <span
                 className="h-2.5 w-2.5 shrink-0 rounded-full"
                 style={{
@@ -120,7 +124,6 @@ export function DashboardCharts({
       <div className="rounded-xl border bg-card p-4 shadow-sm sm:p-6">
         <div>
           <h2 className="font-semibold">Lead Sources</h2>
-
           <p className="mt-1 text-sm text-muted-foreground">
             Where your leads are coming from.
           </p>
@@ -146,8 +149,8 @@ export function DashboardCharts({
                 <CartesianGrid
                   strokeDasharray="3 3"
                   horizontal={false}
-                  vertical={true}
-                  stroke="hsl(var(--border))"
+                  vertical
+                  stroke="var(--border)"
                 />
 
                 <XAxis
@@ -155,7 +158,10 @@ export function DashboardCharts({
                   allowDecimals={false}
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 12 }}
+                  tick={{
+                    fontSize: 12,
+                    fill: "var(--muted-foreground)",
+                  }}
                 />
 
                 <YAxis
@@ -164,25 +170,29 @@ export function DashboardCharts({
                   width={90}
                   tickLine={false}
                   axisLine={false}
-                  tick={{ fontSize: 11 }}
+                  tick={{
+                    fontSize: 11,
+                    fill: "var(--muted-foreground)",
+                  }}
                 />
 
                 <Tooltip
                   formatter={(value) => [value, "Leads"]}
                   cursor={{
-                    fill: "hsl(var(--muted) / 0.5)",
+                    fill: "var(--muted)",
                   }}
                   contentStyle={{
                     borderRadius: "8px",
-                    border: "1px solid hsl(var(--border))",
-                    backgroundColor: "hsl(var(--card))",
+                    border: "1px solid var(--border)",
+                    backgroundColor: "var(--card)",
+                    color: "var(--card-foreground)",
                   }}
                 />
 
                 <Bar
                   dataKey="value"
                   radius={[0, 5, 5, 0]}
-                  fill="hsl(var(--chart-1))"
+                  fill="var(--chart-1)"
                   maxBarSize={28}
                 />
               </BarChart>
@@ -195,7 +205,6 @@ export function DashboardCharts({
       <div className="rounded-xl border bg-card p-4 shadow-sm sm:p-6 lg:col-span-2">
         <div>
           <h2 className="font-semibold">Follow-up Overview</h2>
-
           <p className="mt-1 text-sm text-muted-foreground">
             Keep track of follow-ups that need your attention.
           </p>
@@ -208,7 +217,6 @@ export function DashboardCharts({
               className="rounded-lg border bg-muted/20 p-4"
             >
               <p className="text-sm text-muted-foreground">{item.name}</p>
-
               <p className="mt-2 text-2xl font-semibold">{item.value}</p>
             </div>
           ))}
